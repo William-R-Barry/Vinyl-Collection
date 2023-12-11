@@ -6,7 +6,7 @@ export function addBasicElement(content, elementId, elementType = "div", domCont
     this.appendChild(element);
 
     return element;
-};
+}
 
 export function addAnchorElement(content, elementId, href, onclick, domContext = document){
     let element = domContext.createElement("a");
@@ -18,7 +18,7 @@ export function addAnchorElement(content, elementId, href, onclick, domContext =
     this.appendChild(element);
 
     return element;
-};
+}
 
 export function addFormElement(method, action, formId, domContext = document){
     let formElement = domContext.createElement("form");
@@ -32,7 +32,7 @@ export function addFormElement(method, action, formId, domContext = document){
 
 export function addFormInputElement(content, placeHolder, elementName, elementId, domContext = document){
     let formInputElement = domContext.createElement("input");
-    
+
     formInputElement.setAttribute("value", content);
     formInputElement.setAttribute("type", "text");
     formInputElement.setAttribute("name", elementName);
@@ -42,4 +42,4 @@ export function addFormInputElement(content, placeHolder, elementName, elementId
 
     return formInputElement;
  
-};
+}

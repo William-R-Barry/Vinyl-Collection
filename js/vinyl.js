@@ -9,7 +9,7 @@ const FORM_PLACE_HOLDER = {
     coverArt: "Cover art for record",
     credits: "Credits for contributors to the record",
     description: "Verbose description of the record",
-}
+};
 
 export class Vinyl{
     constructor(artist, title, label, genre, coverArt, credits, description, id){
@@ -65,7 +65,7 @@ export class Vinyl{
         addFormInputElement.call(formElement,this.description, FORM_PLACE_HOLDER.credits, "description", `${this.id}_description_ti`);
 
     };
-};
+}
 
 export class VinylLineItem{
     constructor(id, artist, title, label, genre){
@@ -91,4 +91,4 @@ export class VinylLineItem{
         if(this.genre !== "") addBasicElement.call(childContainer, this.genre, `${this.id}_genre`,"span");
         addAnchorElement.call(childContainer, "open", `${this.id}_open`,`view.html?vinyl-id=${this.id}`);
     }
-};
+}
