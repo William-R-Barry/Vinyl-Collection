@@ -2,13 +2,13 @@
     <head>
         <script type="module">
             import {Vinyl} from "./js/vinyl.js";
-            import {fetchVinylById, getVinlyId} from "./js/vinyl-frontend.js";
+            import {fetchVinylById, getVinlyId, renderVinylForm} from "./js/vinyl-frontend.js";
             import {ERROR} from "./js/codes.js";
 
             try{
                 const vinylId = getVinlyId();
                 let vinyl = fetchVinylById(vinylId);
-                vinyl.renderForm("vinyl");
+                renderVinylForm(vinyl, "vinyl");
 
             }
             catch(error){

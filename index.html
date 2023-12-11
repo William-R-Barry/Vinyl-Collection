@@ -2,7 +2,7 @@
     <head>
         <script type="module">
         import {VinylLineItem} from "./js/vinyl.js";
-        import {fetchVinylsByFilter} from "./js/vinyl-frontend.js";
+        import {fetchVinylsByFilter, renderVinylLineItem} from "./js/vinyl-frontend.js";
         import {ERROR} from "./js/codes.js";
 
         let filter = "";
@@ -11,7 +11,7 @@
 
         if(vinylLineItems.length > 0){
             for(let vinylLineItem of vinylLineItems){
-                vinylLineItem.render("search_results");
+                renderVinylLineItem(vinylLineItem, "search_results");
             }
         }
         else{
