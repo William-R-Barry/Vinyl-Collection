@@ -7,8 +7,7 @@
             try{
                 const vinylId = getVinlyId();
                 let vinyl = fetchVinylById(vinylId);
-                vinyl.renderForm("vinyl");
-
+                vinyl.renderDisplay("vinyl");
             }
             catch(error){
                 switch(error){
