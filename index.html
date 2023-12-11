@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <script type="module">
+        import {VinylLineItem} from "./js/vinyl.js";
+        import {fetchVinylsByFilter, ERROR} from "./js/vinyl-frontend.js";
+
+        let filter = "";
+
+        let vinylLineItems = fetchVinylsByFilter(filter);
+
+        if(vinylLineItems.length > 0){
+            for(let vinylLineItem of vinylLineItems){
+                vinylLineItem.render("search_results");
+            }
+        }
+        else{
+            alert("Sorry, no vinyl match you filter.")
+        }
+        </script>
+    </head>
+
+    <body>
+    
+        <div id="app_navigation">
+            <a href="index.html" id="navigation_search">Search</a>
+            <a href="create.html" id="navigation_create">Create</a>
+        </div>
+
+        <div id="app_content">
+            <div id="search_filter">
+
+            </div>
+            <div id="search_results">
+
+            </div>
+        </div>
+    
+    </body>
+</html>
