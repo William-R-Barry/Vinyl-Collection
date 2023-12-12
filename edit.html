@@ -2,13 +2,16 @@
     <head>
         <script type="module">
             import {Vinyl} from "./js/vinyl.js";
-            import {fetchVinylById, getVinlyId, ERROR} from "./js/vinyl-frontend.js";
+            import {fetchVinylById, getVinlyId, renderVinylForm} from "./js/vinyl-frontend.js";
+            import {ERROR} from "./js/codes.js";
 
             try{
                 const vinylId = getVinlyId();
-                let vinyl = fetchVinylById(vinylId);
-                vinyl.renderForm("vinyl");
-
+                fetchVinylById(vinylId).then(vinylDataObject => {
+                    renderVinylForm(vinylDataObject, "vinyl");
+                }).catch(error => {
+                    alert("ERROR: something went wrong with the request.");
+                });
             }
             catch(error){
                 switch(error){
