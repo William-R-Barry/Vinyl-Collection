@@ -7,8 +7,12 @@
 
             try{
                 const vinylId = getVinlyId();
-                let vinyl = fetchVinylById(vinylId);
-                renderVinyl(vinyl, "vinyl");
+                fetchVinylById(vinylId).then(vinylDataObject => {
+                    renderVinyl(vinylDataObject, "vinyl");
+                }).catch(error => {
+                    console.log(error);
+                    alert("ERROR: something went wrong with the request.");
+                });
             }
             catch(error){
                 switch(error){

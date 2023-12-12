@@ -10,6 +10,8 @@ export class Vinyl{
         this.credits = (credits !== undefined) ? credits : "";
         this.description = (description !== undefined) ? description : "";
         this.id = (id !== undefined) ? title : DEFAULT_ID;
+        this.purchasePrice = "";
+        this.currentMarketValue = ""; // - ( idea from Albert ) - web crawler retrieved value e.g. discogs etc. Could be called periodiclly or on demand.
     };
     // properties
     id = "";

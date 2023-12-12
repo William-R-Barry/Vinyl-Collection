@@ -1,0 +1,23 @@
+[
+    {
+        "id": "01",
+        "artist": "Nick Cave and The Bad Seeds",
+        "title": "The Good Son",
+        "label": "Mute",
+        "genre": "Dark folk"
+    },
+    {
+        "id": "02",
+        "artist": "PJ Harvey",
+        "title": "To Bring You My Love",
+        "label": "Island Records",
+        "genre": "Dark folk"
+    },
+    {
+        "id": "03",
+        "artist": "The Cure",
+        "title": "Disintegration",
+        "label": "Fiction Records",
+        "genre": "Goth"
+    }
+]

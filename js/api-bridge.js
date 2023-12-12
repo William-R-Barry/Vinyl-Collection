@@ -1,60 +1,28 @@
 import {ERROR} from "./codes.js";
 
 export function fetchVinylById(id){
-    if(id === undefined || id === "") throw ERROR.no_id_specified;
+    const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-record.json";
+    
+    return fetch(url,{method:"GET"})
+        .then(reponse => reponse.json())
+        .catch(error => {
+            logAPIError(error);
 
-    let requestSuccessful = true;
-    let recordFound = true;
-
-    if(!requestSuccessful){ throw ERROR.request_failed; }
-    if(!recordFound){ throw ERROR.no_id_matched; }
-
-    const json = JSON.stringify({
-        artist: "Nick Cave and The Bad Seeds",
-        title: "The Good Son",
-        label: "Mute",
-        genre: "Dark folk",
-        coverArt: "",
-        credits: "Some credits",
-        description: "Some descriptive text...",
-    })
-    const dataObject = JSON.parse(json);
-
-    return dataObject;
+            return error;
+        });
 }
 
 export function fetchVinylLineItemsByFilter(filter){
-    let requestSuccessful = true;
+    const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-line-item-set.json";
 
-    if(!requestSuccessful){ throw ERROR.request_failed; }
+    return fetch(url,{method:"GET"})
+        .then(reponse => reponse.json())
+        .catch(error => {
+            logAPIError(error);
 
-    const json = JSON.stringify([
-        {
-            id: "v01",
-            artist: "Nick Cave and The Bad Seeds",
-            title: "The Good Son",
-            label: "Mute",
-            genre: "Dark folk",
-        },
-        {
-            id: "v02",
-            artist: "PJ Harvey",
-            title: "To Bring You My Love",
-            label: "Island Records",
-            genre: "Dark folk",
-        },
-        {
-            id: "v03",
-            artist: "The Cure",
-            title: "Disintegration",
-            label: "Fiction Records",
-            genre: "Goth",
-        }
-    ]);
-    const dataArray = JSON.parse(json);
-
-    return dataArray;
-}
+            return error;
+        });
+};
 
 const API_PARAMETERS = {
     url: "",
@@ -75,4 +43,8 @@ function apiRequest(action,resource,queryParameters){
         default:
             throw "ERROR: Uknown request action!";
     }
+}
+
+function logAPIError(error){
+    console.log(error);
 }

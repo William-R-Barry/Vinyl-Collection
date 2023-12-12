@@ -17,9 +17,11 @@ const FORM_PLACE_HOLDER = {
 
 
 export function fetchVinylById(id){
-    const vinylDataObject = apiFetchVinylById(id);
+    return apiFetchVinylById(id); 
+}
 
-    return new Vinyl(
+export function renderVinyl(vinylDataObject, parentElement, domContext = document){
+    const vinyl = new Vinyl(
         vinylDataObject.artist,
         vinylDataObject.title,
         vinylDataObject.label,
@@ -29,14 +31,26 @@ export function fetchVinylById(id){
         vinylDataObject.description,
         vinylDataObject.id,
     );
+
+    const container = domContext.getElementById(parentElement);
+
+    addBasicElement.call(container, vinyl.artist, `${vinyl.id}_artist`);
+    addBasicElement.call(container, vinyl.title, `${vinyl.id}_title`);
+    if(vinyl.credits !== "") addBasicElement.call(container, vinyl.credits, `${vinyl.id}_credits`);
+    if(vinyl.genre !== "") addBasicElement.call(container, vinyl.genre, `${vinyl.id}_genre`);
+    if(vinyl.description !== "") addBasicElement.call(container, vinyl.description, `${vinyl.id}_description`);
+    addAnchorElement.call(container,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`);
 }
 
 export function fetchVinylsByFilter(filter){
-    const vinylDataObjects = apiFetchVinylLineItemsByFilter(filter);
-    let lineItems = [];
+    return apiFetchVinylLineItemsByFilter(filter);
+}
+
+export function renderVinylLineItems(vinylDataObjects, parentElement){
+    let vinylLineItems = [];
 
     for(let vinylDataObject of vinylDataObjects){
-        lineItems.push(new VinylLineItem(
+        vinylLineItems.push(new VinylLineItem(
             vinylDataObject.id,
             vinylDataObject.artist,
             vinylDataObject.title,
@@ -45,7 +59,14 @@ export function fetchVinylsByFilter(filter){
         ));
     }
 
-    return lineItems;
+    if(vinylLineItems.length > 0){
+        for(let vinylLineItem of vinylLineItems){
+            renderVinylLineItem(vinylLineItem, parentElement);
+        }
+    }
+    else{
+        alert("Sorry, no vinyl match you filter.")
+    }
 }
 
 export function getVinlyId(){
@@ -54,18 +75,6 @@ export function getVinlyId(){
     if(!urlParams.has("vinyl-id")){ throw ERROR.no_id_specified; }
 
     return urlParams.get("vinyl-id");
-}
-
-export function renderVinyl(vinyl, elementId, domContext = document){
-    const container = domContext.getElementById(elementId);
-
-    addBasicElement.call(container, vinyl.artist, `${vinyl.id}_artist`);
-    addBasicElement.call(container, vinyl.title, `${vinyl.id}_title`);
-    if(vinyl.credits !== "") addBasicElement.call(container, vinyl.credits, `${vinyl.id}_credits`);
-    if(vinyl.genre !== "") addBasicElement.call(container, vinyl.genre, `${vinyl.id}_genre`);
-    if(vinyl.description !== "") addBasicElement.call(container, vinyl.description, `${vinyl.id}_description`);
-    addAnchorElement.call(container,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`)
-
 }
 
 export function renderVinylForm(vinyl, elementId, domContext = document){
@@ -79,7 +88,6 @@ export function renderVinylForm(vinyl, elementId, domContext = document){
     addFormInputElement.call(formElement,vinyl.credits, FORM_PLACE_HOLDER.credits, "credits", `${vinyl.id}_credits_ti`);
     addFormInputElement.call(formElement,vinyl.genre, FORM_PLACE_HOLDER.credits, "genre", `${vinyl.id}_genre_ti`);
     addFormInputElement.call(formElement,vinyl.description, FORM_PLACE_HOLDER.credits, "description", `${vinyl.id}_description_ti`);
-
 }
 
 export function renderVinylLineItem(vinylLineItem, elementId, domContext = document){

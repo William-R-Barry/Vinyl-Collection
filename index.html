@@ -2,21 +2,16 @@
     <head>
         <script type="module">
         import {VinylLineItem} from "./js/vinyl.js";
-        import {fetchVinylsByFilter, renderVinylLineItem} from "./js/vinyl-frontend.js";
+        import {fetchVinylsByFilter, renderVinylLineItems} from "./js/vinyl-frontend.js";
         import {ERROR} from "./js/codes.js";
 
         let filter = "";
 
-        let vinylLineItems = fetchVinylsByFilter(filter);
-
-        if(vinylLineItems.length > 0){
-            for(let vinylLineItem of vinylLineItems){
-                renderVinylLineItem(vinylLineItem, "search_results");
-            }
-        }
-        else{
-            alert("Sorry, no vinyl match you filter.")
-        }
+        fetchVinylsByFilter(filter).then(vinylDataObjects => {
+            renderVinylLineItems(vinylDataObjects, "search_results");
+        }).catch(error => { 
+            alert("ERROR: something went wrong with the request.");
+        });
         </script>
     </head>
 
