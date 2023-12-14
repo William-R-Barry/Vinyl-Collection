@@ -15,10 +15,10 @@
             }
             catch(error){
                 switch(error){
-                    case ERROR.no_id_specified:
+                    case ERROR.REQUEST.no_id_specified:
                         alert("ERROR: No vinyl ID has been specified.");
                     break;
-                    case ERROR.no_id_matched:
+                    case ERROR.REQUEST.no_id_matched:
                         alert("ERROR: No match could be found for the specified vinyl ID.");
                     break;
                     default: alert(error);
@@ -37,6 +37,9 @@
         <div id="app_content">
             <div id="vinyl">
                 
+            </div>
+            <div id="vinyl_actions">
+
             </div>
         </div>
     

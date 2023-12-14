@@ -3,25 +3,13 @@ import {ERROR} from "./codes.js";
 export function fetchVinylById(id){
     const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-record.json";
     
-    return fetch(url,{method:"GET"})
-        .then(reponse => reponse.json())
-        .catch(error => {
-            logAPIError(error);
-
-            return error;
-        });
+    return apiRequestGet(url);
 }
 
 export function fetchVinylLineItemsByFilter(filter){
     const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-line-item-set.json";
 
-    return fetch(url,{method:"GET"})
-        .then(reponse => reponse.json())
-        .catch(error => {
-            logAPIError(error);
-
-            return error;
-        });
+    return apiRequestGet(url);
 };
 
 const API_PARAMETERS = {
@@ -29,20 +17,27 @@ const API_PARAMETERS = {
     port: "",
 }
 
-function apiRequest(action,resource,queryParameters){
-    switch(action.toLowerCase()){
-        case "get":
-            console.log(`GET api request: ${resource} - ${queryParameters}`);
-            break;
-        case "post":
-            console.log(`POST api request: ${resource} - ${queryParameters}`);
-            break;
-        case "put":
-            console.log(`PUT api request: ${resource} - ${queryParameters}`);
-            break;
-        default:
-            throw "ERROR: Uknown request action!";
-    }
+function apiRequestGet(url){
+    return fetch(url,{method:"GET"})
+        .then(response => {
+            console.log("GET responded.");
+            if(!response.ok){
+                logAPIError(response);
+
+                throw ERROR.RESPONSE.response_not_ok;
+            }
+            if(response.headers.get("content-type") !== "application/json"){
+                logAPIError(response);
+                
+                throw ERROR.RESPONSE.unexpected_response_content_type;
+            }
+            return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.
+        })
+        .catch(error => {
+            logAPIError(error);
+
+            return error;
+        });
 }
 
 function logAPIError(error){

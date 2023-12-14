@@ -20,6 +20,19 @@ export function fetchVinylById(id){
     return apiFetchVinylById(id); 
 }
 
+export function fetchVinylsByFilter(filter){
+    return apiFetchVinylLineItemsByFilter(filter);
+}
+
+export function getVinlyId(){
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if(!urlParams.has("vinyl-id")){ throw ERROR.REQUEST.no_id_specified; }
+
+    return urlParams.get("vinyl-id");
+}
+
+
 export function renderVinyl(vinylDataObject, parentElement, domContext = document){
     const vinyl = new Vinyl(
         vinylDataObject.artist,
@@ -42,8 +55,17 @@ export function renderVinyl(vinylDataObject, parentElement, domContext = documen
     addAnchorElement.call(container,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`);
 }
 
-export function fetchVinylsByFilter(filter){
-    return apiFetchVinylLineItemsByFilter(filter);
+export function renderVinylForm(vinylDataObject, parentElement, domContext = document){
+    const container = domContext.getElementById(parentElement);
+    const formActionURL = "";
+
+    const formElement = addFormElement.call(container, "post", formActionURL, `${vinylDataObject.id}_form`);
+
+    addFormInputElement.call(formElement,vinylDataObject.artist, FORM_PLACE_HOLDER.artist, "artist", `${vinylDataObject.id}_artist_ti`);
+    addFormInputElement.call(formElement,vinylDataObject.title, FORM_PLACE_HOLDER.title, "title", `${vinylDataObject.id}_title_ti`);
+    addFormInputElement.call(formElement,vinylDataObject.credits, FORM_PLACE_HOLDER.credits, "credits", `${vinylDataObject.id}_credits_ti`);
+    addFormInputElement.call(formElement,vinylDataObject.genre, FORM_PLACE_HOLDER.credits, "genre", `${vinylDataObject.id}_genre_ti`);
+    addFormInputElement.call(formElement,vinylDataObject.description, FORM_PLACE_HOLDER.credits, "description", `${vinylDataObject.id}_description_ti`);
 }
 
 export function renderVinylLineItems(vinylDataObjects, parentElement){
@@ -65,29 +87,8 @@ export function renderVinylLineItems(vinylDataObjects, parentElement){
         }
     }
     else{
-        alert("Sorry, no vinyl match you filter.")
+        alert("Sorry, no vinyl match you filter.");
     }
-}
-
-export function getVinlyId(){
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if(!urlParams.has("vinyl-id")){ throw ERROR.no_id_specified; }
-
-    return urlParams.get("vinyl-id");
-}
-
-export function renderVinylForm(vinyl, elementId, domContext = document){
-    const container = domContext.getElementById(elementId);
-    const formActionURL = "";
-
-    const formElement = addFormElement.call(container, "post", formActionURL, `${vinyl.id}_form`);
-
-    addFormInputElement.call(formElement,vinyl.artist, FORM_PLACE_HOLDER.artist, "artist", `${vinyl.id}_artist_ti`);
-    addFormInputElement.call(formElement,vinyl.title, FORM_PLACE_HOLDER.title, "title", `${vinyl.id}_title_ti`);
-    addFormInputElement.call(formElement,vinyl.credits, FORM_PLACE_HOLDER.credits, "credits", `${vinyl.id}_credits_ti`);
-    addFormInputElement.call(formElement,vinyl.genre, FORM_PLACE_HOLDER.credits, "genre", `${vinyl.id}_genre_ti`);
-    addFormInputElement.call(formElement,vinyl.description, FORM_PLACE_HOLDER.credits, "description", `${vinyl.id}_description_ti`);
 }
 
 export function renderVinylLineItem(vinylLineItem, elementId, domContext = document){
