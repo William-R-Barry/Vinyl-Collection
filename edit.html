@@ -2,13 +2,18 @@
     <head>
         <script type="module">
             import {Vinyl} from "./js/vinyl.js";
-            import {fetchVinylById, getVinlyId, renderVinylForm} from "./js/vinyl-frontend.js";
+            import {fetchVinylById, getVinlyId, renderVinylForm, renderVinylFormActionsEdit, getVinylFormValues} from "./js/vinyl-frontend.js";
             import {ERROR} from "./js/codes.js";
 
             try{
                 const vinylId = getVinlyId();
                 fetchVinylById(vinylId).then(vinylDataObject => {
                     renderVinylForm(vinylDataObject, "vinyl");
+                    renderVinylFormActionsEdit("vinyl_actions", "vinyl", vinylFormOnClick);
+
+                    function vinylFormOnClick(){
+                        getVinylFormValues(vinylDataObject);
+                    }
                 }).catch(error => {
                     alert("ERROR: something went wrong with the request.");
                 });
@@ -35,12 +40,8 @@
         </div>
 
         <div id="app_content">
-            <div id="vinyl">
-                
-            </div>
-            <div id="vinyl_actions">
-
-            </div>
+            <div id="vinyl"></div>
+            <div id="vinyl_actions"></div>
         </div>
     
     </body>

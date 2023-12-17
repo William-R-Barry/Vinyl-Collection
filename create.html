@@ -2,11 +2,17 @@
     <head>
         <script type="module">
             import {Vinyl} from "./js/vinyl.js";
-            import {renderVinylForm} from "./js/vinyl-frontend.js";
+            import {renderVinylForm, renderVinylFormActionsNew, getVinylFormValues} from "./js/vinyl-frontend.js";
             import {ERROR} from "./js/codes.js";
 
-            let vinyl = new Vinyl();
-            renderVinylForm(vinyl, "new_vinyl");
+            let vinylDataObject = new Vinyl();
+            const NEW_VINYL_FORM_ID = "new_vinyl";
+            renderVinylForm(vinylDataObject, NEW_VINYL_FORM_ID);
+            renderVinylFormActionsNew("vinyl_actions", "new_vinyl", vinylFormOnClick);
+
+            function vinylFormOnClick(){
+                getVinylFormValues(vinylDataObject);
+            }
         </script>
     </head>
 
@@ -18,12 +24,8 @@
         </div>
 
         <div id="app_content">
-            <div id="new_vinyl">
-
-            </div>
-            <div id="vinyl_actions">
-
-            </div>
+            <div id="new_vinyl"></div>
+            <div id="vinyl_actions"></div>
         </div>
     
     </body>

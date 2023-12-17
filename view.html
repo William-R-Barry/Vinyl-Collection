@@ -8,7 +8,7 @@
             try{
                 const vinylId = getVinlyId();
                 fetchVinylById(vinylId).then(vinylDataObject => {
-                    renderVinyl(vinylDataObject, "vinyl");
+                    renderVinyl(vinylDataObject, "vinyl_line_items");
                 }).catch(error => {
                     alert("ERROR: something went wrong with the request.");
                 });
@@ -35,9 +35,7 @@
         </div>
 
         <div id="app_content">
-            <div id="vinyl">
-                
-            </div>
+            <div id="vinyl_line_items"></div>
         </div>
     
     </body>

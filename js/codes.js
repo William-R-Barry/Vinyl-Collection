@@ -6,6 +6,6 @@ export const ERROR = {
     },
     RESPONSE: {
         response_not_ok: "_response_not_ok",
-        unexpected_response_content_type: "_unexpected_response_content_type",
+        unexpected_content_type: "_unexpected_content_type",
     }
 };
