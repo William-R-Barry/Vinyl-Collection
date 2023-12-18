@@ -75,21 +75,20 @@ export function renderVinyl(vinylDataObject, containerElementId, domContext = do
         vinylDataObject.id,
     );
 
-    const container = domContext.getElementById(containerElementId);
+    const containerElement = domContext.getElementById(containerElementId);
 
-    addBasicElement(container, vinyl.artist, `${vinyl.id}_artist`);
-    addBasicElement(container, vinyl.title, `${vinyl.id}_title`);
-    if(vinyl.credits !== "") addBasicElement(container, vinyl.credits, `${vinyl.id}_credits`);
-    if(vinyl.genre !== "") addBasicElement(container, vinyl.genre, `${vinyl.id}_genre`);
-    if(vinyl.description !== "") addBasicElement(container, vinyl.description, `${vinyl.id}_description`);
-    addAnchorElement(container,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`);
+    addBasicElement(containerElement, vinyl.artist, `${vinyl.id}_artist`);
+    addBasicElement(containerElement, vinyl.title, `${vinyl.id}_title`);
+    if(vinyl.credits !== "") addBasicElement(containerElement, vinyl.credits, `${vinyl.id}_credits`);
+    if(vinyl.genre !== "") addBasicElement(containerElement, vinyl.genre, `${vinyl.id}_genre`);
+    if(vinyl.description !== "") addBasicElement(containerElement, vinyl.description, `${vinyl.id}_description`);
 }
 
 export function renderVinylForm(vinylDataObject, containerElementId, domContext = document){
-    const container = domContext.getElementById(containerElementId);
+    const containerElement = domContext.getElementById(containerElementId);
     const formActionURL = "";
 
-    const formElement = addFormElement(container, "post", formActionURL, createFormElementId("vinyl", "form", vinylDataObject.id));
+    const formElement = addFormElement(containerElement, "post", formActionURL, createFormElementId("vinyl", "form", vinylDataObject.id));
 
     for(let i in FORM.VINYL){
         addFormInputElement(
@@ -105,7 +104,12 @@ export function getVinylFormValues(vinylDataObject, domContext = document){
     for(let i in FORM.VINYL){
         console.log(domContext.getElementById(createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinylDataObject.id)).value);
     }
+}
 
+export function renderVinylFormActionsView(containerElementId, onclick, domContext = document){
+    const containerElement = domContext.getElementById(containerElementId);
+    
+    addAnchorElement(containerElement,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`);
 }
 
 export function renderVinylFormActionsNew(containerElementId, vinylFormId, onclick, domContext = document){
@@ -144,11 +148,11 @@ export function renderVinylLineItems(vinylDataObjects, containerElementId){
 }
 
 export function renderVinylLineItem(vinylLineItem, containerElementId, domContext = document){
-    const parentContainer = domContext.getElementById(containerElementId);
-    const childContainer = addBasicElement(parentContainer, "", `${vinylLineItem.id}_line_item`);
+    const parentContainerElement = domContext.getElementById(containerElementId);
+    const childContainerElement = addBasicElement(parentContainerElement, "", `${vinylLineItem.id}_line_item`);
 
-    addBasicElement(childContainer, vinylLineItem.artist, `${vinylLineItem.id}_artist`,"span");
-    addBasicElement(childContainer, vinylLineItem.title, `${vinylLineItem.id}_title`,"span");
-    if(vinylLineItem.genre !== "") addBasicElement(childContainer, vinylLineItem.genre, `${vinylLineItem.id}_genre`,"span");
-    addAnchorElement(childContainer, "open", `${vinylLineItem.id}_open`,`view.html?vinyl-id=${vinylLineItem.id}`);
+    addBasicElement(childContainerElement, vinylLineItem.artist, `${vinylLineItem.id}_artist`,"span");
+    addBasicElement(childContainerElement, vinylLineItem.title, `${vinylLineItem.id}_title`,"span");
+    if(vinylLineItem.genre !== "") addBasicElement(childContainerElement, vinylLineItem.genre, `${vinylLineItem.id}_genre`,"span");
+    addAnchorElement(childContainerElement, "open", `${vinylLineItem.id}_open`,`view.html?vinyl-id=${vinylLineItem.id}`);
 }

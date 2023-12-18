@@ -1,34 +1,8 @@
 <html>
     <head>
         <script type="module">
-            import {Vinyl} from "./js/vinyl.js";
-            import {fetchVinylById, getVinlyId, renderVinylForm, renderVinylFormActionsEdit, getVinylFormValues} from "./js/vinyl-frontend.js";
-            import {ERROR} from "./js/codes.js";
-
-            try{
-                const vinylId = getVinlyId();
-                fetchVinylById(vinylId).then(vinylDataObject => {
-                    renderVinylForm(vinylDataObject, "vinyl");
-                    renderVinylFormActionsEdit("vinyl_actions", "vinyl", vinylFormOnClick);
-
-                    function vinylFormOnClick(){
-                        getVinylFormValues(vinylDataObject);
-                    }
-                }).catch(error => {
-                    alert("ERROR: something went wrong with the request.");
-                });
-            }
-            catch(error){
-                switch(error){
-                    case ERROR.REQUEST.no_id_specified:
-                        alert("ERROR: No vinyl ID has been specified.");
-                    break;
-                    case ERROR.REQUEST.no_id_matched:
-                        alert("ERROR: No match could be found for the specified vinyl ID.");
-                    break;
-                    default: alert(error);
-                }
-            }
+            import {loadEditVinyl} from "./js/ui-workflow.js";
+            loadEditVinyl("vinyl", "vinyl_actions");
         </script>
     </head>
 

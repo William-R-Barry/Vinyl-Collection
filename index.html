@@ -1,17 +1,8 @@
 <html>
     <head>
         <script type="module">
-        import {VinylLineItem} from "./js/vinyl.js";
-        import {fetchVinylsByFilter, renderVinylLineItems} from "./js/vinyl-frontend.js";
-        import {ERROR} from "./js/codes.js";
-
-        let filter = "";
-
-        fetchVinylsByFilter(filter).then(vinylDataObjects => {
-            renderVinylLineItems(vinylDataObjects, "search_results");
-        }).catch(error => { 
-            alert("ERROR: something went wrong with the request.");
-        });
+            import {loadVinylSearch} from "./js/ui-workflow.js";
+            loadVinylSearch("search_results", "search_filter");
         </script>
     </head>
 

@@ -1,18 +1,8 @@
 <html>
     <head>
         <script type="module">
-            import {Vinyl} from "./js/vinyl.js";
-            import {renderVinylForm, renderVinylFormActionsNew, getVinylFormValues} from "./js/vinyl-frontend.js";
-            import {ERROR} from "./js/codes.js";
-
-            let vinylDataObject = new Vinyl();
-            const NEW_VINYL_FORM_ID = "new_vinyl";
-            renderVinylForm(vinylDataObject, NEW_VINYL_FORM_ID);
-            renderVinylFormActionsNew("vinyl_actions", "new_vinyl", vinylFormOnClick);
-
-            function vinylFormOnClick(){
-                getVinylFormValues(vinylDataObject);
-            }
+            import {loadCreateVinyl} from "./js/ui-workflow.js";
+            loadCreateVinyl("new_vinyl", "vinyl_actions");
         </script>
     </head>
 
