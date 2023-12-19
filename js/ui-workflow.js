@@ -1,16 +1,26 @@
 import {Vinyl} from "./vinyl.js";
 import {
-    renderVinyl,
-    renderVinylForm,
-    renderVinylFormActionsView,
-    renderVinylFormActionsNew,
-    renderVinylFormActionsEdit,
-    renderVinylLineItems,
     getVinylFormValues,
     getVinlyId,
     fetchVinylById,
+    renderVinylForm,
+} from "./frontend-common.js";
+import {
     fetchVinylsByFilter,
-} from "./vinyl-frontend.js";
+    renderVinylLineItems,
+} from "./frontend-search.js";
+import {
+    renderVinyl,
+    renderVinylFormActionsView,
+} from "./frontend-view.js";
+import {
+    renderVinylFormActionsNew,
+    createVinyl,
+} from "./frontend-create.js";
+import {
+    renderVinylFormActionsEdit,
+    updateVinyl,
+} from "./frontend-update.js";
 import {ERROR} from "./codes.js";
 
 export function loadViewVinyl(contentContainerId, actionsContainerId){
@@ -21,9 +31,10 @@ export function loadViewVinyl(contentContainerId, actionsContainerId){
             renderVinylFormActionsView(actionsContainerId, vinylFormOnClick);
 
             function vinylFormOnClick(){
-                
+
             }
         }).catch(error => {
+            console.log(error);
             alert("ERROR: something went wrong with the request.");
         });
     }
@@ -41,24 +52,26 @@ export function loadViewVinyl(contentContainerId, actionsContainerId){
 }
 
 export function loadCreateVinyl(contentContainerId, actionsContainerId){
-    let vinylDataObject = new Vinyl();
-    renderVinylForm(vinylDataObject, contentContainerId);
+    const newVinylDataObject = new Vinyl();
+    renderVinylForm(newVinylDataObject, contentContainerId);
     renderVinylFormActionsNew(actionsContainerId, contentContainerId, vinylFormOnClick);
 
     function vinylFormOnClick(){
-        getVinylFormValues(vinylDataObject);
+        const vinylDataObject = getVinylFormValues(newVinylDataObject);
+        createVinyl(vinylDataObject);
     }
 }
 
 export function loadEditVinyl(contentContainerId, actionsContainerId){
     try{
         const vinylId = getVinlyId();
-        fetchVinylById(vinylId).then(vinylDataObject => {
-            renderVinylForm(vinylDataObject, contentContainerId);
+        fetchVinylById(vinylId).then(existingVinylDataObject => {
+            renderVinylForm(existingVinylDataObject, contentContainerId);
             renderVinylFormActionsEdit(actionsContainerId, contentContainerId, vinylFormOnClick);
 
             function vinylFormOnClick(){
-                getVinylFormValues(vinylDataObject);
+                const vinylDataObject = getVinylFormValues(existingVinylDataObject);
+                updateVinyl(vinylDataObject);
             }
         }).catch(error => {
             alert("ERROR: something went wrong with the request.");
@@ -77,12 +90,12 @@ export function loadEditVinyl(contentContainerId, actionsContainerId){
     }
 }
 
-export function loadVinylSearch(){
-    let filter = "";
+export function loadSearchVinyl(){
+    const defaultFilter = "";
 
-    fetchVinylsByFilter(filter).then(vinylDataObjects => {
+    fetchVinylsByFilter(defaultFilter).then(vinylDataObjects => {
         renderVinylLineItems(vinylDataObjects, "search_results");
-    }).catch(error => { 
+    }).catch(error => {
         alert("ERROR: something went wrong with the request.");
     });
 }
