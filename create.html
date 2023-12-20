@@ -1,12 +1,9 @@
 <html>
     <head>
         <script type="module">
-            import {Vinyl} from "./js/vinyl.js";
-            import {renderVinylForm} from "./js/vinyl-frontend.js";
-            import {ERROR} from "./js/codes.js";
-
-            let vinyl = new Vinyl();
-            renderVinylForm(vinyl, "new_vinyl");
+            import {loadCreateVinyl} from "./js/ui-workflow.js";
+            
+            loadCreateVinyl("new_vinyl", "vinyl_actions");
         </script>
     </head>
 
@@ -18,9 +15,8 @@
         </div>
 
         <div id="app_content">
-            <div id="new_vinyl">
-
-            </div>
+            <div id="new_vinyl"></div>
+            <div id="vinyl_actions"></div>
         </div>
     
     </body>

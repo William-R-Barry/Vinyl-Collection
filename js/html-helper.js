@@ -1,44 +1,54 @@
-export function addBasicElement(content, elementId, elementType = "div", domContext = document){
+export function addBasicElement(containerElement, content, elementId, elementType = "div", domContext = document){
     let element = domContext.createElement(elementType);
     element.innerHTML = content;
     element.id = elementId;
 
-    this.appendChild(element);
+    containerElement.appendChild(element);
 
     return element;
 }
 
-export function addAnchorElement(content, elementId, href, onclick, domContext = document){
+export function addAnchorElement(containerElement, content, elementId, href, onclick, domContext = document){
     let element = domContext.createElement("a");
     element.innerHTML = content;
     element.id = elementId;
     element.href = href;
     if(onclick !== undefined || onclick !== "") { element.onclick = onclick; }
 
-    this.appendChild(element);
+    containerElement.appendChild(element);
 
     return element;
 }
 
-export function addFormElement(method, action, formId, domContext = document){
+export function addFormElement(containerElement, method, action, formId, domContext = document){
     let formElement = domContext.createElement("form");
     formElement.setAttribute("method", method);
     formElement.setAttribute("action", action);
 
-    this.appendChild(formElement);
+    containerElement.appendChild(formElement);
 
     return formElement;
 }
 
-export function addFormInputElement(content, placeHolder, elementName, elementId, domContext = document){
+export function createFormElementId(name, elementType, recordId){
+    const ELEMENT_PREFIX = {
+        form: "form",
+        textInput: "ti",
+    }
+
+    return `${(recordId !== undefined && recordId !== "") ? recordId+"_" : ""}${name}_${ELEMENT_PREFIX[elementType]}`;
+}
+
+export function addFormInputElement(containerElement, content, placeHolder, elementName, elementId, domContext = document){
     let formInputElement = domContext.createElement("input");
 
     formInputElement.setAttribute("value", content);
     formInputElement.setAttribute("type", "text");
     formInputElement.setAttribute("name", elementName);
     formInputElement.setAttribute("placeholder", placeHolder);
+    formInputElement.setAttribute("id", elementId);
 
-    this.appendChild(formInputElement);
+    containerElement.appendChild(formInputElement);
 
     return formInputElement;
  
