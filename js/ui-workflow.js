@@ -1,27 +1,20 @@
-import {Vinyl} from "./vinyl.js";
+import {Vinyl,} from "./vinyl.js";
 import {
     getVinylFormValues,
     getVinlyId,
     fetchVinylById,
     renderVinylForm,
+    sendCreateVinyl,
+    sendUpdateVinyl,
+    displaySuccessMessage,
+    displayErrorMessage,
+    logError,
 } from "./frontend-common.js";
-import {
-    fetchVinylsByFilter,
-    renderVinylLineItems,
-} from "./frontend-search.js";
-import {
-    renderVinyl,
-    renderVinylFormActionsView,
-} from "./frontend-view.js";
-import {
-    renderVinylFormActionsNew,
-    createVinyl,
-} from "./frontend-create.js";
-import {
-    renderVinylFormActionsEdit,
-    updateVinyl,
-} from "./frontend-update.js";
-import {ERROR} from "./codes.js";
+import {fetchVinylsByFilter, renderVinylLineItems,} from "./frontend-search.js";
+import {renderVinyl, renderVinylFormActionsView,} from "./frontend-view.js";
+import {renderVinylFormActionsNew,} from "./frontend-create.js";
+import {renderVinylFormUpdateActions,} from "./frontend-update.js";
+import {SUCCESS, ERROR,} from "./codes.js";
 
 export function loadViewVinyl(contentContainerId, actionsContainerId){
     try{
@@ -34,19 +27,21 @@ export function loadViewVinyl(contentContainerId, actionsContainerId){
 
             }
         }).catch(error => {
-            console.log(error);
-            alert("ERROR: something went wrong with the request.");
+            logError(error);
+            displayErrorMessage(ERROR.GENERIC.MESSAGE);
         });
     }
     catch(error){
         switch(error){
-            case ERROR.REQUEST.no_id_specified:
-                alert("ERROR: No vinyl ID has been specified.");
+            case ERROR.REQUEST.NO_ID_SPECIFIED.CODE:
+                displayErrorMessage(ERROR.REQUEST.NO_ID_SPECIFIED.MESSAGE);
             break;
-            case ERROR.REQUEST.no_id_matched:
-                alert("ERROR: No match could be found for the specified vinyl ID.");
+            case ERROR.REQUEST.NO_ID_MATCHED.CODE:
+                displayErrorMessage(ERROR.REQUEST.NO_ID_MATCHED.MESSAGE);
             break;
-            default: alert(error);
+            default:
+                logError(error);
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
         }
     }
 }
@@ -57,37 +52,81 @@ export function loadCreateVinyl(contentContainerId, actionsContainerId){
     renderVinylFormActionsNew(actionsContainerId, contentContainerId, vinylFormOnClick);
 
     function vinylFormOnClick(){
-        const vinylDataObject = getVinylFormValues(newVinylDataObject);
-        createVinyl(vinylDataObject);
+        try{
+            const vinylDataObject = getVinylFormValues(newVinylDataObject);
+            if(!vinylDataObject.validate()){ throw ERROR.VINYL.VALIDATION_FAILED.CODE; }
+            createVinyl(vinylDataObject).then(response => { displaySuccessMessage(SUCCESS.VINYL.RECORD_CREATED.MESSAGE); });
+        }
+        catch(error){
+            logError(error);
+
+            switch(error){
+                case ERROR.VINYL.VALIDATION_FAILED.CODE:        
+                    displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
+                break;
+                default:
+                    displayErrorMessage(ERROR.GENERIC.MESSAGE);
+            }
+        }
     }
 }
 
-export function loadEditVinyl(contentContainerId, actionsContainerId){
+function createVinyl(vinylDataObject){
+    return sendCreateVinyl(vinylDataObject).then(response => {
+        return response;
+    }).catch(error => {
+        logError(error);
+        displayErrorMessage();
+    });
+}
+
+export function loadUpdateVinyl(contentContainerId, actionsContainerId){
     try{
         const vinylId = getVinlyId();
         fetchVinylById(vinylId).then(existingVinylDataObject => {
             renderVinylForm(existingVinylDataObject, contentContainerId);
-            renderVinylFormActionsEdit(actionsContainerId, contentContainerId, vinylFormOnClick);
+            renderVinylFormUpdateActions(actionsContainerId, contentContainerId, vinylFormOnClick);
 
             function vinylFormOnClick(){
                 const vinylDataObject = getVinylFormValues(existingVinylDataObject);
-                updateVinyl(vinylDataObject);
+                if(!vinylDataObject.validate()){ throw ERROR.VINYL.VALIDATION_FAILED.CODE; }
+                updateVinyl(vinylDataObject).then(response => { displaySuccessMessage(SUCCESS.VINYL.RECORD_UPDATED.MESSAGE); });
             }
         }).catch(error => {
-            alert("ERROR: something went wrong with the request.");
+            logError(error);
+
+            switch(error){
+                case ERROR.VINYL.VALIDATION_FAILED.CODE:        
+                    displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
+                break;
+                default:
+                    displayErrorMessage(ERROR.GENERIC.MESSAGE);
+            }
         });
     }
     catch(error){
+        logError(error);
+
         switch(error){
-            case ERROR.REQUEST.no_id_specified:
-                alert("ERROR: No vinyl ID has been specified.");
+            case ERROR.REQUEST.NO_ID_SPECIFIED.CODE:
+                displayErrorMessage(ERROR.REQUEST.NO_ID_SPECIFIED.MESSAGE);
             break;
-            case ERROR.REQUEST.no_id_matched:
-                alert("ERROR: No match could be found for the specified vinyl ID.");
+            case ERROR.REQUEST.NO_ID_MATCHED.CODE:
+                displayErrorMessage(ERROR.REQUEST.NO_ID_MATCHED.MESSAGE);
             break;
-            default: alert(error);
+            default: 
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
         }
     }
+}
+
+function updateVinyl(vinylDataObject){
+    return sendUpdateVinyl(vinylDataObject).then(response => {
+        return response;
+    }).catch(error => {
+        logError(error);
+        displayErrorMessage(ERROR.GENERIC.MESSAGE);
+    });
 }
 
 export function loadSearchVinyl(){
@@ -96,6 +135,7 @@ export function loadSearchVinyl(){
     fetchVinylsByFilter(defaultFilter).then(vinylDataObjects => {
         renderVinylLineItems(vinylDataObjects, "search_results");
     }).catch(error => {
-        alert("ERROR: something went wrong with the request.");
+        logError(error);
+        displayErrorMessage(ERROR.GENERIC.MESSAGE);
     });
 }

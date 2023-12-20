@@ -17,18 +17,46 @@ export function fetchVinylLineItemsByFilter(filter){
     return apiRequestGet(url);
 };
 
+export function sendCreateVinylRequest(dataObject){
+    logAPIAction("Send POST request");
+    logAPIAction(dataObject);
+
+    dataObject.id = "01";
+
+    return new Promise((resolve, reject) => {
+        if(dataObject === undefined){
+            reject(new Error("POST request failed!"));
+        }
+
+        setTimeout(function(dataObject){resolve(dataObject);},2500,dataObject);
+    });
+}
+
+export function sendUpdateVinylRequest(dataObject){
+    logAPIAction("Send PUT request");
+    logAPIAction(dataObject);
+
+    return new Promise((resolve, reject) => {
+        if(dataObject === undefined){
+            reject(new Error("PUT request failed!"));
+        }
+
+        setTimeout(function(dataObject){resolve(dataObject);},2500,dataObject);
+    });
+}
+
 function apiRequestGet(url){
     return fetch(url,{method:"GET"})
         .then(response => {
             if(!response.ok){
                 logAPIError(response);
 
-                throw ERROR.RESPONSE.response_not_ok;
+                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
             }
             if(response.headers.get("content-type") !== "application/json"){
                 logAPIError(response);
                 
-                throw ERROR.RESPONSE.unexpected_content_type;
+                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
             }
             return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.
         })
@@ -45,12 +73,12 @@ function apiRequestPost(ur, dataObjectl){
             if(!response.ok){
                 logAPIError(response);
 
-                throw ERROR.RESPONSE.response_not_ok;
+                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
             }
             if(response.headers.get("content-type") !== "application/json"){
                 logAPIError(response);
                 
-                throw ERROR.RESPONSE.unexpected_content_type;
+                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
             }
             return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.
         })
@@ -67,12 +95,12 @@ function apiRequestPut(url){
             if(!response.ok){
                 logAPIError(response);
 
-                throw ERROR.RESPONSE.response_not_ok;
+                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
             }
             if(response.headers.get("content-type") !== "application/json"){
                 logAPIError(response);
                 
-                throw ERROR.RESPONSE.unexpected_content_type;
+                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
             }
             return response.ok;
         })
@@ -81,6 +109,10 @@ function apiRequestPut(url){
 
             return error;
         });
+}
+
+function logAPIAction(error){
+    console.log(error);
 }
 
 function logAPIError(error){

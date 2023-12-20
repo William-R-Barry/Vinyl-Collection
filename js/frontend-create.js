@@ -5,7 +5,3 @@ export function renderVinylFormActionsNew(containerElementId, vinylFormId, oncli
 
     addAnchorElement(containerElement, "save", `${vinylFormId}_save`, "javascript:void(0);", onclick);
 }
-
-export function createVinyl(vinylDataObject){
-
-}

@@ -25,5 +25,5 @@ export function renderVinyl(vinylDataObject, containerElementId, domContext = do
 export function renderVinylFormActionsView(containerElementId, onclick, domContext = document){
     const containerElement = domContext.getElementById(containerElementId);
 
-    addAnchorElement(containerElement,"edit", `${vinyl.id}_open`,`edit.html?vinyl-id=${vinyl.id}`);
+    addAnchorElement(containerElement,"update", `${vinyl.id}_open`,`update.html?vinyl-id=${vinyl.id}`);
 }

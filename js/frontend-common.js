@@ -2,6 +2,8 @@ import {Vinyl,} from "./vinyl.js";
 import {addFormElement, addFormInputElement, createFormElementId} from "./html-helper.js";
 import {
     fetchVinylById as apiFetchVinylById,
+    sendCreateVinylRequest as apiSendCreateVinyl,
+    sendUpdateVinylRequest as apiSendUpdateVinyl,
 } from "./api-bridge.js";
 
 const FORM = {
@@ -51,7 +53,7 @@ export function fetchVinylById(id){
 export function getVinlyId(){
     const urlParams = new URLSearchParams(window.location.search);
 
-    if(!urlParams.has("vinyl-id")){ throw ERROR.REQUEST.no_id_specified; }
+    if(!urlParams.has("vinyl-id")){ throw ERROR.REQUEST.NO_ID_SPECIFIED; }
 
     return urlParams.get("vinyl-id");
 }
@@ -73,9 +75,35 @@ export function renderVinylForm(vinylDataObject, containerElementId, domContext 
 }
 
 export function getVinylFormValues(originalVinylDataObject, domContext = document){
+    let vinylDataObject = new Vinyl();
+
     for(let i in FORM.VINYL){
-        console.log(domContext.getElementById(createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, originalVinylDataObject.id)).value);
+        vinylDataObject[FORM.VINYL[i].KEY] = domContext.getElementById(createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, originalVinylDataObject.id)).value;
     }
 
-    return new Vinyl();
+    return vinylDataObject;
+}
+
+export function sendCreateVinyl(vinylDataObject){
+    return apiSendCreateVinyl(vinylDataObject);
+}
+
+export function sendUpdateVinyl(vinylDataObject){
+    return apiSendUpdateVinyl(vinylDataObject);
+}
+
+export function displaySuccessMessage(message){
+    displayMessage(`Success: ${message}.`);
+}
+
+export function displayErrorMessage(message){
+    displayMessage(`Error: ${message}!`);
+}
+
+function displayMessage(message){
+    alert(message);
+}
+
+export function logError(error){
+    console.log(error);
 }
