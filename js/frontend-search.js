@@ -1,4 +1,3 @@
-import {VinylLineItem,} from "./vinyl.js";
 import {addBasicElement, addAnchorElement,} from "./html-helper.js";
 import {
     fetchVinylLineItemsByFilter as apiFetchVinylLineItemsByFilter,
@@ -8,26 +7,9 @@ export function fetchVinylsByFilter(filter){
     return apiFetchVinylLineItemsByFilter(filter);
 }
 
-export function renderVinylLineItems(vinylDataObjects, containerElementId){
-    let vinylLineItems = [];
-
-    for(let vinylDataObject of vinylDataObjects){
-        vinylLineItems.push(new VinylLineItem(
-            vinylDataObject.id,
-            vinylDataObject.artist,
-            vinylDataObject.title,
-            vinylDataObject.label,
-            vinylDataObject.genre,
-        ));
-    }
-
-    if(vinylLineItems.length > 0){
-        for(let vinylLineItem of vinylLineItems){
-            renderVinylLineItem(vinylLineItem, containerElementId);
-        }
-    }
-    else{
-        alert("Sorry, no vinyl match you filter.");
+export function renderVinylLineItems(vinylLineItems, containerElementId){
+    for(let vinylLineItem of vinylLineItems){
+        renderVinylLineItem(vinylLineItem, containerElementId);
     }
 }
 

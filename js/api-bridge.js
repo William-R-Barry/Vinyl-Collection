@@ -1,120 +1,166 @@
-import {ERROR} from "./codes.js";
+import {ERROR, API} from "./codes.js";
+import { Vinyl, VinylLineItem } from "./vinyl.js";
 
 const API_PARAMETERS = {
-    url: "",
-    port: "",
+    URL: "127.0.0.1",
+    PORT: "8124",
 }
 
 export function fetchVinylById(id){
-    const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-record.json";
+    const url = `${apiGetBaseURL()}/${id}`;
     
-    return apiRequestGet(url);
+    return apiRequestGet(url).then(vinylJSON => {
+        return new Vinyl(
+            vinylJSON.artist,
+            vinylJSON.title,
+            vinylJSON.label,
+            vinylJSON.genre,
+            vinylJSON.coverArt,
+            vinylJSON.credits,
+            vinylJSON.description,
+            vinylJSON.parchasePrice,
+            vinylJSON.id,
+        );
+    });
 }
 
 export function fetchVinylLineItemsByFilter(filter){
-    const url = "http://localhost:8080/Vinyl collection/www/public/test-data/vinyl-line-item-set.json";
+    let url = apiGetBaseURL();
+    let queryString = "";
 
-    return apiRequestGet(url);
-};
+    for(let key in filter){
+        if(queryString.length>0) queryString += `&${key}=${filter[key]}`;
+        else queryString += `${key}=${filter[key]}`;
+    }
 
-export function sendCreateVinylRequest(dataObject){
-    logAPIAction("Send POST request");
-    logAPIAction(dataObject);
+    if(queryString.length>0) url += `?${queryString}`;
 
-    dataObject.id = "01";
+    return apiRequestGet(url).then(vinyLineItemsJSON => {
+        let vinyLineItems = [];
 
-    return new Promise((resolve, reject) => {
-        if(dataObject === undefined){
-            reject(new Error("POST request failed!"));
+        for(let vinyLineItemJSON of vinyLineItemsJSON){
+            vinyLineItems.push(new VinylLineItem(
+                vinyLineItemJSON.id,
+                vinyLineItemJSON.artist,
+                vinyLineItemJSON.title,
+                vinyLineItemJSON.label,
+                vinyLineItemJSON.genre,
+            ));
         }
 
-        setTimeout(function(dataObject){resolve(dataObject);},2500,dataObject);
+        return vinyLineItems;
     });
 }
 
-export function sendUpdateVinylRequest(dataObject){
-    logAPIAction("Send PUT request");
-    logAPIAction(dataObject);
+export function sendCreateVinylRequest(vinyl){
+    let url = apiGetBaseURL();
+    logAction("Send POST request");
+    logAction(vinyl);
 
-    return new Promise((resolve, reject) => {
-        if(dataObject === undefined){
-            reject(new Error("PUT request failed!"));
-        }
+    return apiRequestPost(url, vinyl.toJSON());
+}
 
-        setTimeout(function(dataObject){resolve(dataObject);},2500,dataObject);
-    });
+export function sendUpdateVinylRequest(vinyl){
+    const url = `${apiGetBaseURL()}/${vinyl.id}`;
+    logAction("Send PUT request");
+    logAction(vinyl);
+
+    return apiRequestPut(url, vinyl.toJSON());
+}
+
+function apiGetBaseURL(){
+    return `http://${API_PARAMETERS.URL}:${API_PARAMETERS.PORT}/`;
 }
 
 function apiRequestGet(url){
-    return fetch(url,{method:"GET"})
+    return fetch(url, {method: "GET"})
         .then(response => {
             if(!response.ok){
-                logAPIError(response);
+                logError(response);
 
-                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
+                throw new Error(ERROR.RESPONSE.RESPONSE_NOT_OK.CODE);
             }
             if(response.headers.get("content-type") !== "application/json"){
-                logAPIError(response);
+                logError(response);
                 
-                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
+                throw new Error(ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE);
             }
-            return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.
+
+            return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.;
+        })
+        .then(reponseObject => {
+            if(reponseObject.status.code === API.ERROR.INVALID_REQUEST.CODE){
+                throw new Error(ERROR.RESPONSE.INVALID_REQUEST.CODE);
+            }
+            if(reponseObject.status.code === API.ERROR.NO_RECORD_FOUND.CODE){
+                throw new Error(ERROR.RESPONSE.NO_ID_MATCHED.CODE);
+            }
+
+            return reponseObject.data;
         })
         .catch(error => {
-            logAPIError(error);
+            logError(error);
 
-            return error;
+            throw error;
         });
 }
 
-function apiRequestPost(ur, dataObjectl){
-    return fetch(url,{method:"POST", body: dataObjectl})
+function apiRequestPost(url, requestJSON){
+    return fetch(url,{method: "POST", body: requestJSON})
         .then(response => {
             if(!response.ok){
-                logAPIError(response);
-
-                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
+                throw new Error(ERROR.RESPONSE.RESPONSE_NOT_OK.CODE);
             }
             if(response.headers.get("content-type") !== "application/json"){
-                logAPIError(response);
-                
-                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
+                throw new Error(ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE);
             }
-            return response.json(); // note: the fetch json method resolves to a JavaScript object not JSON.
+
+            return response.json(); // note: the fetch response json method resolves to a JavaScript object not JSON.
+        })
+        .then(reponseObject => {
+            if(reponseObject.status.code === API.ERROR.INVALID_REQUEST.CODE){
+                throw new Error(ERROR.RESPONSE.INVALID_REQUEST.CODE);
+            }
+
+            return reponseObject.data;
         })
         .catch(error => {
-            logAPIError(error);
+            logError(error);
 
-            return error;
+            throw error;
         });
 }
 
-function apiRequestPut(url){
-    return fetch(url,{method:"PUT", body: dataObjectl})
-        .then(response => {
-            if(!response.ok){
-                logAPIError(response);
+function apiRequestPut(url, requestJSON){
+    return fetch(url,{method: "PUT", body: requestJSON})
+    .then(response => {
+        if(!response.ok){
+            throw new Error(ERROR.RESPONSE.RESPONSE_NOT_OK.CODE);
+        }
+        if(response.headers.get("content-type") !== "application/json"){
+            throw new Error(ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE);
+        }
 
-                throw ERROR.RESPONSE.RESPONSE_NOT_OK.CODE;
-            }
-            if(response.headers.get("content-type") !== "application/json"){
-                logAPIError(response);
-                
-                throw ERROR.RESPONSE.UNEXPECTED_CONTENT_TYPE.CODE;
-            }
-            return response.ok;
-        })
-        .catch(error => {
-            logAPIError(error);
+        return response.json(); // note: the fetch response json method resolves to a JavaScript object not JSON.
+    })
+    .then(reponseObject => {
+        if(reponseObject.status.code === API.ERROR.INVALID_REQUEST.CODE){
+            throw new Error(ERROR.RESPONSE.INVALID_REQUEST.CODE);
+        }
 
-            return error;
-        });
+        return reponseObject.data;
+    })
+    .catch(error => {
+        logError(error);
+
+        throw error;
+    });
 }
 
-function logAPIAction(error){
+function logAction(error){
     console.log(error);
 }
 
-function logAPIError(error){
+function logError(error){
     console.log(error);
 }
