@@ -33,10 +33,6 @@ export const ERROR = {
             CODE: "_no_id_specified",
             MESSAGE: "No id specified",
         },
-        NO_ID_MATCHED: {
-            CODE: "_no_match_found_for_id",
-            MESSAGE: "No match found for the specified ID",
-        },
         REQUEST_FAILED: {
             CODE: "_request_failed",
             MESSAGE: "The request failed",
@@ -49,13 +45,46 @@ export const ERROR = {
         },
         UNEXPECTED_CONTENT_TYPE: {
             CODE: "_unexpected_content_type",
-            MESSAGE: "The response was of an unexpected type",
+            MESSAGE: "The request response was of an unexpected type",
+        },
+        INVALID_REQUEST: {
+            CODE: "_invalid_request",
+            MESSAGE: "The request is invalid",
+        },
+        NO_ID_MATCHED: {
+            CODE: "_no_match_found_for_id",
+            MESSAGE: "No match found for the specified ID",
         },
     },
     VINYL: {
         VALIDATION_FAILED: {
             CODE: "_validation_failed",
             MESSAGE: "The validation failed",
+        },
+    },
+};
+
+export const API ={
+    ERROR: {
+        INVALID_REQUEST: {
+            CODE: "_invalid_request",
+            MESSAGE: "Invalid request",
+        },
+        NO_RECORD_FOUND: {
+            CODE: "_no_record_found",
+            MESSAGE: "The record could not be found",
+        },
+        RECORD_NOT_CREATED: {
+            CODE: "_the_record_could_not_be_created",
+            MESSAGE: "The record could not be created",
+        },
+        RECORD_NOT_UPDATED: {
+            CODE: "_the_record_could_not_be_updated",
+            MESSAGE: "The record could not be updated",
+        },
+        RECORD_NOT_DELETED: {
+            CODE: "_the_record_could_not_be_deleted",
+            MESSAGE: "The record could not be deleted",
         },
     },
 };

@@ -7,6 +7,7 @@ import {
     sendCreateVinyl,
     sendUpdateVinyl,
     displaySuccessMessage,
+    displayInformationMessage,
     displayErrorMessage,
     logError,
 } from "./frontend-common.js";
@@ -17,54 +18,64 @@ import {renderVinylFormUpdateActions,} from "./frontend-update.js";
 import {SUCCESS, ERROR,} from "./codes.js";
 
 export function loadViewVinyl(contentContainerId, actionsContainerId){
+    let vinylId;
+
     try{
-        const vinylId = getVinlyId();
-        fetchVinylById(vinylId).then(vinylDataObject => {
-            renderVinyl(vinylDataObject, contentContainerId);
-            renderVinylFormActionsView(actionsContainerId, vinylFormOnClick);
-
-            function vinylFormOnClick(){
-
-            }
-        }).catch(error => {
-            logError(error);
-            displayErrorMessage(ERROR.GENERIC.MESSAGE);
-        });
+        vinylId = getVinlyId();
     }
     catch(error){
-        switch(error){
+        switch(error.message){
             case ERROR.REQUEST.NO_ID_SPECIFIED.CODE:
                 displayErrorMessage(ERROR.REQUEST.NO_ID_SPECIFIED.MESSAGE);
-            break;
-            case ERROR.REQUEST.NO_ID_MATCHED.CODE:
-                displayErrorMessage(ERROR.REQUEST.NO_ID_MATCHED.MESSAGE);
             break;
             default:
                 logError(error);
                 displayErrorMessage(ERROR.GENERIC.MESSAGE);
         }
+
+        return;
     }
+    fetchVinylById(vinylId).then(vinyl => {
+        renderVinyl(vinyl, contentContainerId);
+        renderVinylFormActionsView(vinyl, actionsContainerId);
+    }).catch(error => {
+       switch(error.message){
+            case ERROR.RESPONSE.NO_ID_MATCHED.CODE:
+                displayErrorMessage(ERROR.RESPONSE.NO_ID_MATCHED.MESSAGE);
+            break;
+            default:
+                logError(error);
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
+        }
+    });
 }
 
 export function loadCreateVinyl(contentContainerId, actionsContainerId){
-    const newVinylDataObject = new Vinyl();
-    renderVinylForm(newVinylDataObject, contentContainerId);
+    const newVinyl = new Vinyl();
+    renderVinylForm(newVinyl, contentContainerId);
     renderVinylFormActionsNew(actionsContainerId, contentContainerId, vinylFormOnClick);
 
     function vinylFormOnClick(){
         try{
-            const vinylDataObject = getVinylFormValues(newVinylDataObject);
-            if(!vinylDataObject.validate()){ throw ERROR.VINYL.VALIDATION_FAILED.CODE; }
-            createVinyl(vinylDataObject).then(response => { displaySuccessMessage(SUCCESS.VINYL.RECORD_CREATED.MESSAGE); });
+            const vinyl = getVinylFormValues(newVinyl);
+            if(!vinyl.validate()){ 
+                displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
+                return;
+             }
+            createVinyl(vinyl).then(response => { 
+                displaySuccessMessage(SUCCESS.VINYL.RECORD_CREATED.MESSAGE); 
+            }).catch(error => {
+                logError(error);
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
+            });
         }
         catch(error){
-            logError(error);
-
-            switch(error){
+            switch(error.message){
                 case ERROR.VINYL.VALIDATION_FAILED.CODE:        
                     displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
                 break;
                 default:
+                    logError(error);
                     displayErrorMessage(ERROR.GENERIC.MESSAGE);
             }
         }
@@ -72,68 +83,71 @@ export function loadCreateVinyl(contentContainerId, actionsContainerId){
 }
 
 function createVinyl(vinylDataObject){
-    return sendCreateVinyl(vinylDataObject).then(response => {
-        return response;
-    }).catch(error => {
-        logError(error);
-        displayErrorMessage();
-    });
+    return sendCreateVinyl(vinylDataObject);
 }
 
 export function loadUpdateVinyl(contentContainerId, actionsContainerId){
+    let vinylId;
+
     try{
-        const vinylId = getVinlyId();
-        fetchVinylById(vinylId).then(existingVinylDataObject => {
-            renderVinylForm(existingVinylDataObject, contentContainerId);
-            renderVinylFormUpdateActions(actionsContainerId, contentContainerId, vinylFormOnClick);
-
-            function vinylFormOnClick(){
-                const vinylDataObject = getVinylFormValues(existingVinylDataObject);
-                if(!vinylDataObject.validate()){ throw ERROR.VINYL.VALIDATION_FAILED.CODE; }
-                updateVinyl(vinylDataObject).then(response => { displaySuccessMessage(SUCCESS.VINYL.RECORD_UPDATED.MESSAGE); });
-            }
-        }).catch(error => {
-            logError(error);
-
-            switch(error){
-                case ERROR.VINYL.VALIDATION_FAILED.CODE:        
-                    displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
-                break;
-                default:
-                    displayErrorMessage(ERROR.GENERIC.MESSAGE);
-            }
-        });
+        vinylId = getVinlyId();
     }
     catch(error){
-        logError(error);
-
-        switch(error){
+        switch(error.message){
             case ERROR.REQUEST.NO_ID_SPECIFIED.CODE:
                 displayErrorMessage(ERROR.REQUEST.NO_ID_SPECIFIED.MESSAGE);
             break;
-            case ERROR.REQUEST.NO_ID_MATCHED.CODE:
-                displayErrorMessage(ERROR.REQUEST.NO_ID_MATCHED.MESSAGE);
-            break;
-            default: 
+            default:
+                logError(error);
                 displayErrorMessage(ERROR.GENERIC.MESSAGE);
         }
-    }
-}
 
-function updateVinyl(vinylDataObject){
-    return sendUpdateVinyl(vinylDataObject).then(response => {
-        return response;
+        return;
+    }
+
+    fetchVinylById(vinylId).then(existingVinylDataObject => {
+        renderVinylForm(existingVinylDataObject, contentContainerId);
+        renderVinylFormUpdateActions(actionsContainerId, contentContainerId, vinylFormOnClick);
+
+        function vinylFormOnClick(){
+            const vinylDataObject = getVinylFormValues(existingVinylDataObject);
+            
+            if(!vinylDataObject.validate()){
+                displayErrorMessage(ERROR.VINYL.VALIDATION_FAILED.MESSAGE);
+
+                return;
+            }
+            
+            updateVinyl(vinylDataObject).then(response => { displaySuccessMessage(SUCCESS.VINYL.RECORD_UPDATED.MESSAGE); })
+            .catch(error => {
+                logError(error);
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
+            });
+        }
     }).catch(error => {
-        logError(error);
-        displayErrorMessage(ERROR.GENERIC.MESSAGE);
+        switch(error.message){
+            case ERROR.RESPONSE.NO_ID_MATCHED.CODE:
+                displayErrorMessage(ERROR.RESPONSE.NO_ID_MATCHED.MESSAGE);
+            break;
+            default:
+                logError(error);
+                displayErrorMessage(ERROR.GENERIC.MESSAGE);
+        }
     });
 }
 
-export function loadSearchVinyl(){
-    const defaultFilter = "";
+function updateVinyl(vinylDataObject){
+    return sendUpdateVinyl(vinylDataObject)
+}
 
-    fetchVinylsByFilter(defaultFilter).then(vinylDataObjects => {
-        renderVinylLineItems(vinylDataObjects, "search_results");
+export function loadSearchVinyl(){
+    const defaultFilter = {
+        title: "the good son"
+    };
+
+    fetchVinylsByFilter(defaultFilter).then(vinylLineItems => {
+        if(vinylLineItems.length > 0) renderVinylLineItems(vinylLineItems, "search_results");
+        else displayInformationMessage("Sorry, no vinyl matched your criteria.");
     }).catch(error => {
         logError(error);
         displayErrorMessage(ERROR.GENERIC.MESSAGE);

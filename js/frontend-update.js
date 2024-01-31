@@ -5,7 +5,3 @@ export function renderVinylFormUpdateActions(containerElementId, vinylFormId, on
 
     addAnchorElement(containerElement, "save", `${vinylFormId}_save`, "javascript:void(0);", onclick);
 }
-
-export function updateVinyl(vinylDataObject){
-
-}

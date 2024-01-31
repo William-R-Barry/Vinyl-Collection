@@ -1,18 +1,6 @@
-import {Vinyl} from "./vinyl.js";
 import {addBasicElement, addAnchorElement,} from "./html-helper.js";
 
-export function renderVinyl(vinylDataObject, containerElementId, domContext = document){
-    const vinyl = new Vinyl(
-        vinylDataObject.artist,
-        vinylDataObject.title,
-        vinylDataObject.label,
-        vinylDataObject.genre,
-        vinylDataObject.coverArt,
-        vinylDataObject.credits,
-        vinylDataObject.description,
-        vinylDataObject.id,
-    );
-
+export function renderVinyl(vinyl, containerElementId, domContext = document){
     const containerElement = domContext.getElementById(containerElementId);
 
     addBasicElement(containerElement, vinyl.artist, `${vinyl.id}_artist`);
@@ -22,7 +10,7 @@ export function renderVinyl(vinylDataObject, containerElementId, domContext = do
     if(vinyl.description !== "") addBasicElement(containerElement, vinyl.description, `${vinyl.id}_description`);
 }
 
-export function renderVinylFormActionsView(containerElementId, onclick, domContext = document){
+export function renderVinylFormActionsView(vinyl, containerElementId, domContext = document){
     const containerElement = domContext.getElementById(containerElementId);
 
     addAnchorElement(containerElement,"update", `${vinyl.id}_open`,`update.html?vinyl-id=${vinyl.id}`);
