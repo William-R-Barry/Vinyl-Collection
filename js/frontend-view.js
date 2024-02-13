@@ -1,17 +1,23 @@
-import {addBasicElement, addAnchorElement,} from "./html-helper.js";
+import {addDivElement, addActionButtonElement, addHeadingElement,} from "./html-helper.js";
 
 export function renderVinyl(vinyl, containerElementId, domContext = document){
     const containerElement = domContext.getElementById(containerElementId);
 
-    addBasicElement(containerElement, vinyl.artist, `${vinyl.id}_artist`);
-    addBasicElement(containerElement, vinyl.title, `${vinyl.id}_title`);
-    if(vinyl.credits !== "") addBasicElement(containerElement, vinyl.credits, `${vinyl.id}_credits`);
-    if(vinyl.genre !== "") addBasicElement(containerElement, vinyl.genre, `${vinyl.id}_genre`);
-    if(vinyl.description !== "") addBasicElement(containerElement, vinyl.description, `${vinyl.id}_description`);
+    addHeadingElement(containerElement, {content: vinyl.title, className: "vinyl view title"});
+    addDivElement(containerElement, {content: vinyl.artist, className: "vinyl view artist"});
+    if(vinyl.genre !== "") addDivElement(containerElement, {content: vinyl.genre, className: "vinyl view genre"});
+    if(vinyl.description !== "") addDivElement(containerElement, {content: vinyl.description, className: "vinyl view description"});
+    if(vinyl.credits !== "") addDivElement(containerElement, {content: vinyl.credits, className: "vinyl view credits"});
+    if(vinyl.label !== "")addDivElement(containerElement, {content: vinyl.labeld, className: "vinyl view label"});
 }
 
 export function renderVinylFormActionsView(vinyl, containerElementId, domContext = document){
     const containerElement = domContext.getElementById(containerElementId);
 
-    addAnchorElement(containerElement,"update", `${vinyl.id}_open`,`update.html?vinyl-id=${vinyl.id}`);
+    addActionButtonElement(containerElement, {
+        buttonClassName: "vinyl button",
+        content: "update",
+        elementId: `${vinyl.id}_open`,
+        href: `update.html?vinyl-id=${vinyl.id}`,
+    });
 }
