@@ -1,5 +1,5 @@
 import {Vinyl,} from "./vinyl.js";
-import {addFormElement, addFormInputElement, createFormElementId} from "./html-helper.js";
+import {addFormElement, addFormInputElement, createFormElementId, addBrElement} from "./html-helper.js";
 import {
     fetchVinylById as apiFetchVinylById,
     sendCreateVinylRequest as apiSendCreateVinyl,
@@ -10,18 +10,13 @@ import {ERROR,} from "./codes.js";
 const FORM = {
     VINYL: [
         {
-            KEY: "artist",
-            PLACE_HOLDER: "Name of artist",
-            ELEMENT_TYPE: "textInput",
-        },
-        {
             KEY: "title",
             PLACE_HOLDER: "Title of record",
             ELEMENT_TYPE: "textInput",
         },
         {
-            KEY: "label",
-            PLACE_HOLDER: "Responsible record label or self released",
+            KEY: "artist",
+            PLACE_HOLDER: "Name of artist",
             ELEMENT_TYPE: "textInput",
         },
         {
@@ -35,15 +30,20 @@ const FORM = {
             ELEMENT_TYPE: "image",
         },*/
         {
+            KEY: "description",
+            PLACE_HOLDER: "Verbose description of the record",
+            ELEMENT_TYPE: "textInput",
+        },
+        {
             KEY: "credits",
             PLACE_HOLDER: "Credits for contributors to the record",
             ELEMENT_TYPE: "textInput",
         },
         {
-            KEY: "description",
-            PLACE_HOLDER: "Verbose description of the record",
+            KEY: "label",
+            PLACE_HOLDER: "Responsible record label or self released",
             ELEMENT_TYPE: "textInput",
-        }, 
+        },         
     ],
 };
 
@@ -68,10 +68,15 @@ export function renderVinylForm(vinyl, containerElementId, domContext = document
     for(let i in FORM.VINYL){
         addFormInputElement(
             formElement,
-            vinyl[FORM.VINYL[i].KEY],
-            FORM.VINYL[i].PLACE_HOLDER,
-            FORM.VINYL[i].KEY,
-            createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinyl.id));
+            {
+                content: vinyl[FORM.VINYL[i].KEY],
+                elementSize: 50,
+                elementName: FORM.VINYL[i].KEY,
+                elementId: createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinyl.id),
+                placeHolder: FORM.VINYL[i].PLACE_HOLDER,
+            }
+        );
+        addBrElement(formElement);
     }
 }
 

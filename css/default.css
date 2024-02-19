@@ -1,0 +1,93 @@
+a {
+    color: rgb(159, 145, 53);
+    text-decoration: none;
+}
+a:hover {
+    color: rgb(100, 92, 34);
+    cursor: pointer;
+}
+body {
+    margin: 1em;
+    padding: 1em;
+}
+body, form input {
+    color: rgb(130, 71, 27);
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+form input {
+    background-color: rgba(130, 71, 27, 0.1);
+    border-radius: 0.4em;
+    border: 0.1em solid rgb(130, 71, 27);
+    margin-top: 0.4em;
+    padding: 0.3em;
+}
+form input:focus {
+    background-color: rgba(130, 71, 27, 0.2);
+    border-color: rgb(100, 92, 34);
+    outline: none;
+}
+
+.button {
+    border: solid 1px rgb(142, 102, 71);
+    border-radius: 0.5em;
+    margin-top: 1em;
+    padding: 0.3em;
+    width:fit-content;
+}
+.button:hover {
+    background-color: rgba(142, 102, 71, 0.1);
+}
+
+div[class="lineItem"] {
+    border: solid 1px;
+    border-radius: 1em;
+    margin: 1em 0em 1em 0em;
+    padding: 1em;
+}
+.lineItem h1 {
+    font-size: 2em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}
+.lineItem.artist {
+    font-size: 1em;
+}
+.lineItem.genre {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+#vinyl {
+    border: solid 1px;
+    border-radius: 1em;
+    margin: 1em 0em 1em 0em;
+    padding: 1em;
+}
+h1.vinyl.view.title {
+    font-size: 2em;
+    margin-top: 0em;
+    margin-bottom: 0em;
+}
+.vinyl.view.artist {
+    font-size: 1em;
+}
+.vinyl.view.genre {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.vinyl.view.description {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.vinyl.view.credits {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.vinyl.view.label {
+    font-size: 0.8em;
+}
+.vinyl.edit form input:first-child{
+    margin-top: 0em;
+}

@@ -1,4 +1,4 @@
-import {addBasicElement, addAnchorElement,} from "./html-helper.js";
+import {addDivElement, addActionButtonElement, addHeadingElement,} from "./html-helper.js";
 import {
     fetchVinylLineItemsByFilter as apiFetchVinylLineItemsByFilter,
 } from "./api-bridge.js";
@@ -13,12 +13,24 @@ export function renderVinylLineItems(vinylLineItems, containerElementId){
     }
 }
 
-function renderVinylLineItem(vinylLineItem, containerElementId, domContext = document){
-    const parentContainerElement = domContext.getElementById(containerElementId);
-    const childContainerElement = addBasicElement(parentContainerElement, "", `${vinylLineItem.id}_line_item`);
+function expandVinylLineItem(vinylId){
+    alert(vinylId);
+}
 
-    addBasicElement(childContainerElement, vinylLineItem.artist, `${vinylLineItem.id}_artist`,"span");
-    addBasicElement(childContainerElement, vinylLineItem.title, `${vinylLineItem.id}_title`,"span");
-    if(vinylLineItem.genre !== "") addBasicElement(childContainerElement, vinylLineItem.genre, `${vinylLineItem.id}_genre`,"span");
-    addAnchorElement(childContainerElement, "open", `${vinylLineItem.id}_open`,`view.html?vinyl-id=${vinylLineItem.id}`);
+function renderVinylLineItem(vinylLineItem, containerElementId, className = "lineItem", domContext = document){
+    const parentContainerElement = domContext.getElementById(containerElementId);
+    const childContainerElement = addDivElement(parentContainerElement, {id: `${vinylLineItem.id}_line_item`, className: className});
+
+    addHeadingElement(childContainerElement, {content: vinylLineItem.title, className: "lineItem title"});
+    addDivElement(childContainerElement, {content: vinylLineItem.artist, className: "lineItem artist"});
+    if(vinylLineItem.genre !== ""){
+        addDivElement(childContainerElement, {content: vinylLineItem.genre, className: "lineItem genre"});
+    }
+    
+    addActionButtonElement(childContainerElement, {
+        buttonClassName: "lineItem button",
+        content: "open",
+        elementId: `${vinylLineItem.id}_open`,
+        href: `./view.html?vinyl-id=${vinylLineItem.id}`,
+    });
 }
