@@ -1,16 +1,22 @@
 const DEFAULT_ID = "_new_vinyl";
 
 export class Vinyl{
-    constructor(artist, title, label, genre, coverArt, credits, description, purchasePrice, id){
-        this.artist = (artist !== undefined) ? artist : "";
-        this.title = (title !== undefined) ? title : "";
-        this.label = (label !== undefined) ? label : "";
-        this.genre = (genre !== undefined) ? genre : "";
-        this.coverArt = (coverArt !== undefined) ? coverArt : "";
-        this.credits = (credits !== undefined) ? credits : "";
-        this.description = (description !== undefined) ? description : "";
-        this.purchasePrice = (purchasePrice !== undefined) ? purchasePrice : 0;
-        this.#id = (id !== undefined) ? id : DEFAULT_ID;
+    constructor(dataObject){
+        if(dataObject !== undefined){
+            this.#id = (dataObject.id !== undefined) ? dataObject.id : DEFAULT_ID;
+            
+            this.artist = (dataObject.artist !== undefined) ? dataObject.artist : "";
+            this.title = (dataObject.title !== undefined) ? dataObject.title : "";
+            this.label = (dataObject.label !== undefined) ? dataObject.label : "";
+            this.genre = (dataObject.genre !== undefined) ? dataObject.genre : "";
+            this.coverArt = (dataObject.coverArt !== undefined) ? dataObject.coverArt : "";
+            this.credits = (dataObject.credits !== undefined) ? dataObject.credits : "";
+            this.description = (dataObject.description !== undefined) ? dataObject.description : "";
+            this.purchasePrice = (dataObject.purchasePrice !== undefined) ? dataObject.purchasePrice : 0;
+        }
+        else{
+            this.#id = DEFAULT_ID;
+        }
     }
     // public properties
     artist

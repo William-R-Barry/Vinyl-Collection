@@ -115,6 +115,27 @@ export function addFormInputElement(containerElement, options){
  
 }
 
+export function addFormHiddenInputElement(containerElement, options){
+    let content = options.content;
+    let elementSize = options.elementSize;
+    let elementName = options.elementName;
+    let elementId = options.elementId;
+    let domContext = (options.domContext !== undefined) ? options.domContext : document;
+
+    let formInputElement = domContext.createElement("input");
+
+    formInputElement.setAttribute("type", "hidden");
+    if(content !== undefined) formInputElement.setAttribute("value", content);
+    if(elementSize !== undefined) formInputElement.setAttribute("size", elementSize);
+    if(elementName !== undefined) formInputElement.setAttribute("name", elementName);
+    if(elementId !== undefined) formInputElement.setAttribute("id", elementId);
+
+    containerElement.appendChild(formInputElement);
+
+    return formInputElement;
+ 
+}
+
 export function createFormElementId(name, elementType, recordId){
     const ELEMENT_PREFIX = {
         form: "form",

@@ -1,5 +1,5 @@
 import {Vinyl,} from "./vinyl.js";
-import {addFormElement, addFormInputElement, createFormElementId, addBrElement} from "./html-helper.js";
+import {addFormElement, addFormInputElement, addFormHiddenInputElement, createFormElementId, addBrElement} from "./html-helper.js";
 import {
     fetchVinylById as apiFetchVinylById,
     sendCreateVinylRequest as apiSendCreateVinyl,
@@ -43,6 +43,11 @@ const FORM = {
             KEY: "label",
             PLACE_HOLDER: "Responsible record label or self released",
             ELEMENT_TYPE: "textInput",
+        },
+        {
+            KEY: "id",
+            PLACE_HOLDER: "Record ID",
+            ELEMENT_TYPE: "hidden",
         },         
     ],
 };
@@ -64,28 +69,45 @@ export function renderVinylForm(vinyl, containerElementId, domContext = document
     const formActionURL = "";
 
     const formElement = addFormElement(containerElement, "post", formActionURL, createFormElementId("vinyl", "form", vinyl.id));
-
+    
     for(let i in FORM.VINYL){
-        addFormInputElement(
-            formElement,
-            {
-                content: vinyl[FORM.VINYL[i].KEY],
-                elementSize: 50,
-                elementName: FORM.VINYL[i].KEY,
-                elementId: createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinyl.id),
-                placeHolder: FORM.VINYL[i].PLACE_HOLDER,
-            }
-        );
-        addBrElement(formElement);
+        switch(FORM.VINYL[i].ELEMENT_TYPE){
+            case "textInput":
+                addFormInputElement(
+                    formElement,
+                    {
+                        content: vinyl[FORM.VINYL[i].KEY],
+                        elementSize: 50,
+                        elementName: FORM.VINYL[i].KEY,
+                        elementId: createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinyl.id),
+                        placeHolder: FORM.VINYL[i].PLACE_HOLDER,
+                    }
+                );
+                addBrElement(formElement);
+            break;
+            case "hidden": 
+            addFormHiddenInputElement(
+                    formElement,
+                    {
+                        content: vinyl[FORM.VINYL[i].KEY],
+                        elementSize: 50,
+                        elementName: FORM.VINYL[i].KEY,
+                        elementId: createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, vinyl.id),
+                    }
+                );
+            break;
+        }
     }
 }
 
 export function getVinylFormValues(originalVinyl, domContext = document){
-    let vinyl = new Vinyl();
+    let vinylDataObject = {};
 
     for(let i in FORM.VINYL){
-        vinyl[FORM.VINYL[i].KEY] = domContext.getElementById(createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, originalVinyl.id)).value;
+        vinylDataObject[FORM.VINYL[i].KEY] = domContext.getElementById(createFormElementId(FORM.VINYL[i].KEY, FORM.VINYL[i].ELEMENT_TYPE, originalVinyl.id)).value;
     }
+
+    let vinyl = new Vinyl(vinylDataObject);
 
     return vinyl;
 }

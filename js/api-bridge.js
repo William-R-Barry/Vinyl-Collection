@@ -10,17 +10,7 @@ export function fetchVinylById(id){
     const url = `${apiGetBaseURL()}/${id}`;
     
     return apiRequestGet(url).then(vinylJSON => {
-        return new Vinyl(
-            vinylJSON.artist,
-            vinylJSON.title,
-            vinylJSON.label,
-            vinylJSON.genre,
-            vinylJSON.coverArt,
-            vinylJSON.credits,
-            vinylJSON.description,
-            vinylJSON.parchasePrice,
-            vinylJSON.id,
-        );
+        return new Vinyl(vinylJSON);
     });
 }
 
